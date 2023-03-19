@@ -1,0 +1,57 @@
+clear;
+clc;
+A= [1 1 2; 2 4 1; 4 2 3];
+b= [-1; -2; 4];
+
+mat=[A b];
+s= size(mat);
+s= s(1);
+
+%상삼각행렬 노가다
+check = mat(2,1)/mat(1,1);
+mat(2,:)= mat(2,:)-mat(1,:)*check;
+
+check = mat(3,1)/mat(1,1);
+mat(3,:)= mat(3,:)-mat(1,:)*check;
+
+check = mat(3,2)/mat(2,2);
+mat(3,:)= mat(3,:)-mat(2,:)*check;
+
+
+%상삼각행렬 2중 for문
+for i=1:s-1
+    for j=i+1:s
+        check=mat(j,i)/mat(i,i);
+        mat(j,:)=mat(j,:)-mat(i,:)*check;
+    end
+end
+
+
+%상삼각행렬 3중 for문
+for i=1:s-1
+    for j=i+1:s
+        check= mat(j,i)/mat(i,i);
+        for k=1:s+1
+            mat(j,k)=mat(j,k)-mat(i,k)*check;
+        end
+    end
+end
+
+
+%연립방정식 풀이 노가다
+x=zeros(3,1);
+x(3)=mat(3,4)/mat(3,3);
+x(2)=(mat(2,4)-mat(2,3)*x(3))/mat(2,2);
+x(1)=(mat(1,4)-mat(1,3)*x(3)-mat(1,2)*x(2))/mat(1,1);
+
+
+%연립방정식 풀이 2중 for문
+x=zeros(s,1);
+for i=s:-1:1
+    x(i)=mat(i,s+1);
+    for j=s:-1:i+1
+        x(i)=x(i)-mat(i,j)*x(j);
+    end
+    x(i)=x(i)/mat(i,i);
+end
+
