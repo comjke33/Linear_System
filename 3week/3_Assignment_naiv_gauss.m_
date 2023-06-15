@@ -1,0 +1,66 @@
+% 예시코드:유일해 3 -4 0
+A=[1 1 2;2 2 1;4 2 3];
+b=[-1;-2;4];
+
+mat = [A b] %첨가행렬
+[s1, s2]=size(A);
+p=ones(2,1); %pivot
+
+while(p(2)<=s1)
+    % pivot이 0일 때, 숫자를 못찾음 -> pivot 열 이동
+    [rows, col]=find(mat(p(1)+1:s1,p(2))~=0,1);
+    if(mat(p(1), p(2))==0 && isempty(rows)) 
+        p(2)=p(2)+1;
+    else
+        %pivot이 0일 때, 숫자를 찾음 -> 교체
+        if(mat(p(1), p(2))==0 && ~isempty(rows))
+            temp = mat(rows+p(1), :);
+            mat(rows+p(1),:) = mat(p(1), :);
+            mat(p(1), :)= temp;
+        end
+        %pivot이 숫자일 경우 + 0일 때 교체한 경우 -> 계산 -> pivot 대각이동
+        for i= p(1)+1:s1
+            check= mat(i, p(2))/mat(p(1), p(2));
+            mat(i,:)=mat(i,:)-mat(p(1), :)*check 
+        end
+        mat = round(mat, 10);
+        p=p+1; 
+    end
+end
+
+%의미없는 영벡터를 제거하는 과정
+for i=1:s1
+    if(~any(mat(i,:), 'all'))
+        s1=i-1;
+    end
+end
+
+%사이즈 비교를 통해 무한한 해 판정
+if(s1<s2)
+    fprintf("해가 무한히 존재");
+    return;
+end
+
+%계수항 영벡터+상수항이 0이 아닐 경우, 해가 없음
+for i=1:s1
+    if(~any(mat(i,1:s2), 'all'))
+        fprintf("해가 없음");
+        return;
+    end
+end
+
+%모두 아니면 유일해
+fprintf("유일해");        
+    
+% 유일해 구하기
+x2= zeros(s2,1);
+for i=s2:-1:1
+    x2(i)= mat(i,s2+1);
+    for j=s2:-1:i+1
+        x2(i)=x2(i)-mat(i,j)*x2(j);
+    end
+    x2(i)=x2(i)/mat(i,i);
+end
+for i=1:s2
+    fprintf("x%d 답 : %d / ",i,x2(i));
+end
