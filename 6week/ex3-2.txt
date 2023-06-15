@@ -1,0 +1,23 @@
+for deg = [0:2: noRev * 360]
+    clf;
+    % Gaussian 분포를 따르는 랜덤 수 생성 및 대입
+    x1 = 20 * cos(deg*pi/180) + randn(1);
+    x2 = 20 * sin(deg*pi/180) + randn(1);
+    x3 = -deg / (noRev * 360) * 20 + randn(1);
+    psi = deg*4 * pi/180;
+    Rz_round = [cos(psi) -sin(psi) 0 x1; sin(psi) cos(psi) 0 x2; 0 0 1 x3; 0 0 0 1];
+    y = Rz_round*d;
+    line([y(1,:) y(1,1)], [y(2,:) y(2,1)], [y(3,:) y(3,1)]);
+    line([60 0 0], [0 0 0], [0 0 0],'Color','r');
+    line([0 0 0], [0 60 0], [0 0 0],'Color','g');
+    line([0 0 0], [0 0 0], [0 0 60],'Color','k');
+    orbit = [orbit; y(1,1), y(2,1), y(3,1)];
+    line(orbit(:,1), orbit(:,2), orbit(:,3));
+    for i = 1:1:8
+        patch([y(1,p(i,1)) y(1,p(i,2)) y(1,p(i,3))], [y(2,p(i,1)) y(2,p(i,2)) y(2,p(i,3))], [y(3,p(i,1)) y(3,p(i,2)) y(3,p(i,3))],c(i));
+    end
+    xlabel('x1-axis'); ylabel('x2-axis'); zlabel('x3-axis');
+    axis([-60 60 -60 60 -60 60]);
+    view([60,60,60]); grid;
+    pause(0.000001);
+end

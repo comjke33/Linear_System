@@ -1,0 +1,25 @@
+x3=0;
+r_Rev=20; % Radius of revolution
+orbit = [0,0,20];
+noRot1=2; % no of 1st rotation
+noRev=2;% no of revolution (공전)
+noRot2=4;% no of 2nd rotation (자전)
+for x1 = [0:0.15:20]
+    clf;
+    psi = noRot1 * 2 * pi * x1/20;
+    Rz_u = [cos(psi) -sin(psi) 0 x1; sin(psi) cos(psi) 0 0; 0 0 1 0; 0 0 0 1];
+    y = Rz_u*d;
+    line([y(1,:) y(1,1)], [y(2,:) y(2,1)], [y(3,:) y(3,1)]);
+    line([40 0 0], [0 0 0], [0 0 0],'Color','r');
+    line([0 0 0], [0 40 0], [0 0 0],'Color','g');
+    line([0 0 0], [0 0 0], [0 0 40],'Color','k');
+    orbit = [orbit; y(1,1) y(2,1), y(3,1)];
+    line(orbit(:,1), orbit(:,2), orbit(:,3));
+    for i = 1:1:8
+        patch([y(1,p(i,1)) y(1,p(i,2)) y(1,p(i,3))], [y(2,p(i,1)) y(2,p(i,2)) y(2,p(i,3))],[y(3,p(i,1)) y(3,p(i,2)) y(3,p(i,3))],c(i));
+    end
+    xlabel('x1-axis'); ylabel('x2-axis'); zlabel('x3-axis');
+    axis([-60 60 -60 60 -60 60]);
+    view([60,60,60]); grid;
+    pause(0.000001);
+end
